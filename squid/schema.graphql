@@ -1,0 +1,21 @@
+type Account @entity {
+    id: ID!
+    transferVolume: BigInt!
+}
+
+type AccountIdentity @entity {
+  id: ID!
+  display: String
+  legal: String
+  web: String
+  riot: String
+  email: String
+  twitter: String
+}
+
+type TransferAccountPair @entity {
+    id: ID!
+    account1: String!
+    account2: String!
+    volume: BigInt!
+}
