@@ -1,8 +1,3 @@
-type Account @entity {
-    id: ID!
-    transferVolume: BigInt!
-}
-
 type AccountIdentity @entity {
   id: ID!
   display: String
@@ -13,9 +8,12 @@ type AccountIdentity @entity {
   twitter: String
 }
 
-type TransferAccountPair @entity {
+type AccountTransfer @entity {
     id: ID!
-    account1: String!
-    account2: String!
-    volume: BigInt!
+    chain: String!
+    blockNumber: Int! @index
+    timestamp: DateTime! @index
+    account1: String! @index
+    account2: String! @index
+    amount: BigInt!
 }
