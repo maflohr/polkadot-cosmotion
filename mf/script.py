@@ -2,7 +2,6 @@ import os
 import io
 import logging
 import numpy
-import datetime
 from scipy.sparse import csr_matrix
 from implicit.bpr import BayesianPersonalizedRanking
 import pandas as pd
@@ -72,40 +71,58 @@ m = BayesianPersonalizedRanking(
     regularization=0.01,
     learning_rate=0.01,
     verify_negative_samples=True,
-    num_threads=numThreads,
+    num_threads=numThreads
 )
 
 m.fit(data)
+
+logging.info("Fit 3D")
+
+m3d = BayesianPersonalizedRanking(
+    factors=2,
+    iterations=512,
+    regularization=0.01,
+    learning_rate=0.01,
+    verify_negative_samples=True,
+    num_threads=numThreads
+)
+
+m3d.fit(data)
 
 logging.info("Write")
 
 fileNameItems = "../data/items.tsv"
 fileNameFactors = "../data/factors.tsv"
+fileNameFactors3d = "../data/factors-3d.tsv"
 
 listItems = list(dictItem.keys())
 
 with io.open(fileNameItems, "w", encoding="utf-8") as fileItems:
     with io.open(fileNameFactors, "w", encoding="utf-8") as fileFactors:
-        fileItems.write("label\taddress\n")
-        for idx, i in enumerate(m.item_factors):
-            account = listItems[idx]
+        with io.open(fileNameFactors3d, "w", encoding="utf-8") as fileFactors3d:
+            fileItems.write("label\taddress\n")
+            for idx, i in enumerate(m.item_factors):
+                i3d = m3d.item_factors[idx]
 
-            if type(account) is pd.Timestamp or len(account) == 0:
-                continue
+                account = listItems[idx]
 
-            account = listItems[idx]
+                if type(account) is pd.Timestamp or len(account) == 0:
+                    continue
 
-            fileFactors.write("\t".join(map(str, i)) + "\n")
+                account = listItems[idx]
 
-            if (
-                account in dictMeta
-                and dictMeta[account] != None
-                and len(str(dictMeta[account]["label"])) > 0
-            ):
-                label = str(dictMeta[account]["label"])
-            else:
-                label = ""
+                fileFactors.write("\t".join(map(str, i)) + "\n")
+                fileFactors3d.write("\t".join(map(str, i3d)) + "\n")
 
-            fileItems.write(label + "\t" + str(account) + "\n")
+                if (
+                    account in dictMeta
+                    and dictMeta[account] != None
+                    and len(str(dictMeta[account]["label"])) > 0
+                ):
+                    label = str(dictMeta[account]["label"])
+                else:
+                    label = ""
+
+                fileItems.write(label + "\t" + str(account) + "\n")
 
 logging.info("Done")
