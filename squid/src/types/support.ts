@@ -64,3 +64,11 @@ export interface BlockContext extends ChainContext {
 export interface Block {
     hash: string
 }
+
+let showLatestWarning = true
+export function deprecateLatest(): void {
+    if (showLatestWarning) {
+        showLatestWarning = false
+        console.warn(`.isLatest, .asLatest properties are deprecated, if you believe this is a mistake, please leave a comment at https://github.com/subsquid/squid/issues/9`)
+    }
+}

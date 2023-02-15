@@ -1,5 +1,7 @@
 import assert from 'assert'
-import {Chain, ChainContext, EventContext, Event, Result, Option} from './support'
+import { Chain, ChainContext, EventContext, Event, Result, Option, deprecateLatest } from './support'
+import * as v504 from './v504'
+import * as v700 from './v700'
 
 export class BalancesTransferEvent {
     private readonly _chain: Chain
@@ -54,8 +56,77 @@ export class BalancesTransferEvent {
     /**
      * Transfer succeeded.
      */
-    get asV9130(): {from: Uint8Array, to: Uint8Array, amount: bigint} {
+    get asV9130(): { from: Uint8Array, to: Uint8Array, amount: bigint } {
         assert(this.isV9130)
         return this._chain.decodeEvent(this.event)
+    }
+}
+
+export class AssetsTransferredEvent {
+    private readonly _chain: Chain
+    private readonly event: Event
+
+    constructor(ctx: EventContext)
+    constructor(ctx: ChainContext, event: Event)
+    constructor(ctx: EventContext, event?: Event) {
+        event = event || ctx.event
+        assert(event.name === 'assets.Transferred')
+        this._chain = ctx._chain
+        this.event = event
+    }
+
+    /**
+     *  Some assets were transferred. \[asset_id, from, to, amount\]
+     */
+    get isV3(): boolean {
+        return this._chain.getEventHash('assets.Transferred') === '5940cf5f83945a6024e99655f1979c05762583b5af1201dba66c10c18b56cff1'
+    }
+
+    /**
+     *  Some assets were transferred. \[asset_id, from, to, amount\]
+     */
+    get asV3(): [number, Uint8Array, Uint8Array, bigint] {
+        assert(this.isV3)
+        return this._chain.decodeEvent(this.event)
+    }
+
+    /**
+     * Some assets were transferred. \[asset_id, from, to, amount\]
+     */
+    get isV504(): boolean {
+        return this._chain.getEventHash('assets.Transferred') === 'd6b774c5b258baa877a8319bea3e3f8d42d54077cfd3ad4848765f205196496c'
+    }
+
+    /**
+     * Some assets were transferred. \[asset_id, from, to, amount\]
+     */
+    get asV504(): [number, v504.AccountId32, v504.AccountId32, bigint] {
+        assert(this.isV504)
+        return this._chain.decodeEvent(this.event)
+    }
+
+    /**
+     * Some assets were transferred.
+     */
+    get isV700(): boolean {
+        return this._chain.getEventHash('assets.Transferred') === 'd868858871cc662d14a67687feea357ae842db006bcaef16e832ad8bf3f67215'
+    }
+
+    /**
+     * Some assets were transferred.
+     */
+    get asV700(): { assetId: number, from: v700.AccountId32, to: v700.AccountId32, amount: bigint } {
+        assert(this.isV700)
+        return this._chain.decodeEvent(this.event)
+    }
+
+    get isLatest(): boolean {
+        deprecateLatest()
+        return this.isV700
+    }
+
+    get asLatest(): { assetId: number, from: v700.AccountId32, to: v700.AccountId32, amount: bigint } {
+        deprecateLatest()
+        return this.asV700
     }
 }

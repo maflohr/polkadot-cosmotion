@@ -1,8 +1,7 @@
 manifestVersion: subsquid.io/v0.1
-name: substrate-template
+name: substrate-cosmotion
 version: 1
-description: |-
-  The very first squid from manifest  
+description: Substrate Cosmotion
 build:
 
 deploy:

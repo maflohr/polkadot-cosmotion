@@ -8,12 +8,14 @@ type AccountIdentity @entity {
   twitter: String
 }
 
-type AccountTransfer @entity {
+type AccountInteraction @entity {
     id: ID!
-    chain: String!
-    blockNumber: Int! @index
-    timestamp: DateTime! @index
     account1: String! @index
     account2: String! @index
-    amount: BigInt!
+}
+
+type AccountActivity @entity {
+    id: ID!
+    timestamp: DateTime! @index
+    account: String! @index
 }
