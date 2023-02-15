@@ -2,8 +2,8 @@
 
 Indexes the following data:
 
-- account: list of accounts with their overall `transfer_volume`
-- transfer_account_pair: every `account` to `account` transfer with the according `volume`
+- account_activity: all account calls with their `timestamp`
+- account_interaction: holds every `account` to `account` transfer as a distinct list
 - account_identity: latest identity data per `account`
 
 ## Prerequisites
