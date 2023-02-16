@@ -5,9 +5,13 @@ import numpy
 from scipy.sparse import csr_matrix
 from implicit.bpr import BayesianPersonalizedRanking
 import pandas as pd
+from sklearn.manifold import TSNE
 from dotenv import load_dotenv
 
-os.chdir(os.path.dirname(__file__))
+path = os.path.dirname(__file__)
+
+if len(path) > 0:
+    os.chdir(path)
 
 load_dotenv()
 
@@ -78,14 +82,9 @@ m.fit(data)
 
 logging.info("Fit 3D")
 
-m3d = BayesianPersonalizedRanking(
-    factors=2,
-    iterations=512,
-    regularization=0.01,
-    learning_rate=0.01,
-    verify_negative_samples=True,
-    num_threads=numThreads
-)
+m3d = TSNE(n_components=3, init="pca", learning_rate="auto")
+
+embeddings3d = m3d.fit_transform(m.item_factors)
 
 m3d.fit(data)
 
@@ -102,7 +101,7 @@ with io.open(fileNameItems, "w", encoding="utf-8") as fileItems:
         with io.open(fileNameFactors3d, "w", encoding="utf-8") as fileFactors3d:
             fileItems.write("label\taddress\n")
             for idx, i in enumerate(m.item_factors):
-                i3d = m3d.item_factors[idx]
+                i3d = embeddings3d[idx]
 
                 account = listItems[idx]
 

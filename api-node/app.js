@@ -101,7 +101,13 @@ app.get("/accounts", async (req, res, next) => {
 
     let d = await data()
 
-    res.json(d.labeledItems)
+    res.json(d.labeledItems.map(i => {
+        return {
+            address: i.address,
+            label: i.label,
+            factors: i.factors3d
+        }
+    }))
 })
 
 app.get("/accounts/:id", async (req, res, next) => {
@@ -135,7 +141,7 @@ app.get("/accounts/:id", async (req, res, next) => {
             address: i.address,
             label: i.label,
             distance: distance(selectedItem.factors, i.factors),
-            factors3d: i.factors3d
+            factors: i.factors3d
         }
     }).sort((a, b) => { return a.distance - b.distance })
 
