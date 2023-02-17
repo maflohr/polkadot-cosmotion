@@ -1,10 +1,12 @@
-# squid
+## Subsquid Data Ingestion
 
-Indexes the following data:
+The Subsquid project ingests from different Substrate chains like Polkadot, Kusama, Acala, Astar, Phala, Statemine, Statemint, HydraDX and many more. The data becomes available indexed on a PostgreSQL database.
 
-- account_activity: all account calls with their `timestamp`
-- account_interaction: holds every `account` to `account` transfer as a distinct list
-- account_identity: latest identity data per `account`
+The data:
+
+- **AccountInteraction**: to determine if a token transfer has happened between 2 accounts. A positive only rating matrix of account <-> account interactions.
+- **AccountActivity**: every signed transaction from every account with a timestamp. Because it is more likely that accounts are acquainted with one another when they are doing things at the same time.
+- **AccountIdentity**: the last known identity per account, listening to `set_identity` function calls from Polkadot & Kusama. Account labels are nice for visualization.
 
 ## Prerequisites
 

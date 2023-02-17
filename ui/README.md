@@ -1,4 +1,6 @@
-# ui
+## UI
+
+A Vue.js frontend, primarily using [3d-force-graph](https://github.com/vasturiano/3d-force-graph) for visualization of the data provided from the [api](../api/).
 
 ## Project setup
 ```
