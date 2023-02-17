@@ -5,7 +5,7 @@ import numpy
 from scipy.sparse import csr_matrix
 from implicit.bpr import BayesianPersonalizedRanking
 import pandas as pd
-from sklearn.manifold import TSNE
+from openTSNE import TSNE
 from dotenv import load_dotenv
 
 path = os.path.dirname(__file__)
@@ -80,13 +80,22 @@ m = BayesianPersonalizedRanking(
 
 m.fit(data)
 
+listItems = list(dictItem.keys())
+
 logging.info("Fit 3D")
 
-m3d = TSNE(n_components=3, init="pca", learning_rate="auto")
+m3d = TSNE(n_jobs=numThreads, verbose=True, negative_gradient_method="bh", n_components=3)
 
-embeddings3d = m3d.fit_transform(m.item_factors)
+slice3d = 0
 
-m3d.fit(data)
+for idx, i in enumerate(m.item_factors):
+    account = listItems[idx]
+
+    if type(account) is pd.Timestamp:
+        slice3d = idx
+        break
+
+embeddings3d = m3d.fit(m.item_factors[:slice3d])
 
 logging.info("Write")
 
@@ -94,20 +103,17 @@ fileNameItems = "../data/items.tsv"
 fileNameFactors = "../data/factors.tsv"
 fileNameFactors3d = "../data/factors-3d.tsv"
 
-listItems = list(dictItem.keys())
-
 with io.open(fileNameItems, "w", encoding="utf-8") as fileItems:
     with io.open(fileNameFactors, "w", encoding="utf-8") as fileFactors:
         with io.open(fileNameFactors3d, "w", encoding="utf-8") as fileFactors3d:
             fileItems.write("label\taddress\n")
             for idx, i in enumerate(m.item_factors):
-                i3d = embeddings3d[idx]
-
                 account = listItems[idx]
 
                 if type(account) is pd.Timestamp or len(account) == 0:
                     continue
 
+                i3d = embeddings3d[idx]
                 account = listItems[idx]
 
                 fileFactors.write("\t".join(map(str, i)) + "\n")

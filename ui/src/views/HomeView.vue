@@ -282,7 +282,7 @@ export default {
                 graph.width(element.offsetWidth);
             }
 
-            let distance = 3072;
+            let distance = 1024;
             let intransition = false;
 
             let pristine = true;
@@ -300,7 +300,7 @@ export default {
                 })
                 .nodeId("id")
                 .nodeLabel("name")
-                .nodeVal(100)
+                .nodeVal(1)
                 .enableNodeDrag(false)
                 .nodeColor((n) =>
                     that.selectedAccount && n.id === that.selectedAccount.id
@@ -487,9 +487,9 @@ export default {
                         distance: x.distance,
                         queryScore: x.queryScore,
                         highlight: i > 0 && i <= 10,
-                        fx: Math.round(x.factors[0] * 1000),
-                        fy: Math.round(x.factors[1] * 1000),
-                        fz: Math.round(x.factors[2] * 1000)
+                        fx: Math.round(x.factors[0] * 1000) / 100,
+                        fy: Math.round(x.factors[1] * 1000) / 100,
+                        fz: Math.round(x.factors[2] * 1000) / 100
                     })
                 )
 

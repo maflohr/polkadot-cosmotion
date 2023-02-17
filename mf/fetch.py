@@ -4,7 +4,8 @@ import pandas as pd
 import psycopg2
 from dotenv import load_dotenv
 
-os.chdir(os.path.dirname(__file__))
+if len(os.path.dirname(__file__)) > 0:
+    os.chdir(os.path.dirname(__file__))
 
 load_dotenv()
 
@@ -18,37 +19,37 @@ logging.basicConfig(
 
 logging.info("Start")
 
-sqlHost = os.environ.get("sqlHost")
+DB_HOST = os.environ.get("DB_HOST")
 
-if sqlHost == None:
-    raise RuntimeError("sqlHost not set")
+if DB_HOST == None:
+    raise RuntimeError("DB_HOST not set")
 
-sqlPort = os.environ.get("sqlPort")
+DB_PORT = os.environ.get("DB_PORT")
 
-if sqlPort == None:
-    raise RuntimeError("sqlPort not set")
+if DB_PORT == None:
+    raise RuntimeError("DB_PORT not set")
 
-sqlDatabase = os.environ.get("sqlDatabase")
+DB_NAME = os.environ.get("DB_NAME")
 
-if sqlDatabase == None:
-    raise RuntimeError("sqlDatabase not set")
+if DB_NAME == None:
+    raise RuntimeError("DB_NAME not set")
 
-sqlUser = os.environ.get("sqlUser")
+DB_USER = os.environ.get("DB_USER")
 
-if sqlUser == None:
-    raise RuntimeError("sqlUser not set")
+if DB_USER == None:
+    raise RuntimeError("DB_USER not set")
 
-sqlPassword = os.environ.get("sqlPassword")
+DB_PASS = os.environ.get("DB_PASS")
 
-if sqlPassword == None:
-    raise RuntimeError("sqlPassword not set")
+if DB_PASS == None:
+    raise RuntimeError("DB_PASS not set")
 
 sqlConnection = psycopg2.connect(
-    host=sqlHost,
-    port=sqlPort,
-    database=sqlDatabase,
-    user=sqlUser,
-    password=sqlPassword,
+    host=DB_HOST,
+    port=DB_PORT,
+    database=DB_NAME,
+    user=DB_USER,
+    password=DB_PASS,
 )
 
 logging.info("Fetch Meta")

@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: squid
+      POSTGRES_PASSWORD: squid
+    profiles:
+      - ingest
+  squid:
+    container_name: squid
+    build: ./squid
+    environment:
+      - DB_NAME=squid
+      - DB_PASS=squid
+      - DB_HOST=db
+      - DB_PORT=5432
+    profiles:
+      - ingest
+  mf:
+    container_name: mf
+    build: ./mf
+    volumes:
+        - data:/data
+    environment:
+      - DB_NAME=squid
+      - DB_PASS=squid
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+    profiles:
+      - manual
+  api:
+    container_name: api
+    build: ./api
+    ports:
+      - 1337:80
+    volumes:
+        - data:/data
+    profiles:
+      - serve
+  ui:
+    container_name: ui
+    build: ./ui
+    ports:
+      - 8080:8080
+    environment:
+      - VUE_APP_API_URL=http://localhost:1337
+    volumes:
+        - data:/data
+    profiles:
+      - serve
+
+volumes:
+  data:
