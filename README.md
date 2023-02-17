@@ -1,4 +1,4 @@
-# Substrate Cosmotion 🌌
+# Polkadot Cosmotion 🌌
 
 The project utilizes [collaborative filtering](https://en.wikipedia.org/wiki/Collaborative_filtering) methods on on-chain data, such as token transfers, to determine the proximity between accounts and assess the probability of them having the same owner or being acquainted with one another.
 
