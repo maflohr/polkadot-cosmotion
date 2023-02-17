@@ -26,7 +26,7 @@ The project is organized into several distinct artifacts. By clicking on each of
 
 It is recommended to run the project using `docker compose` on a powerful machine. A complete run might take **24 hours** and consume up to **32 GB RAM** on a modern workstation.
 
-The sequence contains of 3 phases.
+The sequence consists of 3 phases.
 
 ```bash
 # start ingestion & db - runs ∞ in background to catch up on new blocks
