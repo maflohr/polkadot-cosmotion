@@ -125,6 +125,7 @@
     top: 0px;
     right: 0px;
     width: 450px;
+    max-width: 75%;
     height: 100vh;
     overflow-x: hidden;
     z-index: 100;
