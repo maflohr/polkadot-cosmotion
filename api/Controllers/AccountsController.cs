@@ -20,7 +20,7 @@ public class AccountsController : ControllerBase
 
         var queryItems = query(q).Reverse().ToList();
 
-        return Data.Instance.LabeledItems.Select(
+        var result = Data.Instance.LabeledItems.Select(
             i => new
             {
                 Address = i.Address,
@@ -29,6 +29,22 @@ public class AccountsController : ControllerBase
                 QueryScore = queryItems.IndexOf(i)
             }
         );
+
+        if (queryItems.Count() > 0)
+        {
+            result = result.Concat(
+             Data.Instance.UnlabeledItems.Select(
+                i => new
+                {
+                    Address = i.Address,
+                    Label = i.Label,
+                    Factors = i.Factors3d,
+                    QueryScore = queryItems.IndexOf(i)
+                }).Where(i => i.QueryScore >= 0)
+            );
+        }
+
+        return result;
     }
 
     [HttpGet("{id}")]
